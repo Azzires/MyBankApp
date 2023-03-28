@@ -16,5 +16,5 @@ jobs:
            port: 22
            script: |
              cd /home/azureuser/myDevProject
-             git commit
              git pull origin main
+             git commit 
