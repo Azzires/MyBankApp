@@ -15,5 +15,5 @@ jobs:
            key: ${{ secrets.SSH_PRIVATE_KEY }}
            port: 22
            script: |
-             cd /home/azureuser/myGitAction
-             git pull origin master
+             cd /home/azureuser/myDevProject
+             git pull origin main
