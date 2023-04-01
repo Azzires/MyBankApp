@@ -39,4 +39,4 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: |
-            ${{ env.IMAGE }}:${{ env.IMAGE }}:${{ github.sha }}-${{ github.run_number }} 
+            ${{ env.IMAGE }}:${{ github.sha }}-${{ github.run_number }} 
