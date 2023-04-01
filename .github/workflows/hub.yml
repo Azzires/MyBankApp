@@ -2,8 +2,6 @@ name: ci
 
 on:
   push:
-    tags:
-      - "v*.*.*"
     branches:
       - "main"
       
@@ -12,12 +10,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - 
-        name: Set environment variable
-        run: echo "RELEASE_VERSION=${GITHUB_REF:11}" >> $GITHUB_ENV
-      -
-        name: Test environment variable
-        run: echo ${{ env.RELEASE_VERSION }}
       -
         name: Checkout
         uses: actions/checkout@v3
@@ -37,4 +29,4 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/mydevrepo:${{ env.RELEASE_VERSION }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/mydevrepo:$(date +%s)
