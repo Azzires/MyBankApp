@@ -4,20 +4,24 @@ on:
   push:
     branches:
       - "main"
-    tags:
-      - 'v*'
       
 jobs:
   build:
+    env:
+        IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/mydevrepo
     runs-on: ubuntu-latest
     steps:
       -
+       name: Generate build ID
+       id: prep
+       run: |
+          branch=${GITHUB_REF##*/}
+          sha=${GITHUB_SHA::8}
+          ts=$(date +%s)
+          echo "::set-output name=BUILD_ID::${branch}-${sha}-${ts}"          
+      -
         name: Checkout
         uses: actions/checkout@v3
-      -
-        name: Docker meta
-        id: meta
-        uses: docker/metadata-action@v4
       -
         name: Login to Docker Hub
         uses: docker/login-action@v2
@@ -34,4 +38,5 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/mydevrepo:${{ steps.meta.outputs.tags }}
+          tags: |
+            ${{ env.IMAGE }}:${{ steps.prep.outputs.BUILD_ID }}
