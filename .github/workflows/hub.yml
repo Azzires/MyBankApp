@@ -37,4 +37,4 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}:${{ env.RELEASE_VERSION }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/mydevrepo:${{ env.RELEASE_VERSION }}
