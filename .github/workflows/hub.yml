@@ -16,9 +16,8 @@ jobs:
        id: prep
        run: |
           name=${{vars.NAME}}
-          sha=${GITHUB_SHA::8}
-          ts=$(date +%s)
-          echo "::set-output name=BUILD_ID::${name}-${sha}-${ts}"          
+          sha=${GITHUB_SHA::2}
+          echo "::set-output name=BUILD_ID::${name}-${sha}"          
       -
         name: Checkout
         uses: actions/checkout@v3
