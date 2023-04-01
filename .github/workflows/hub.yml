@@ -15,10 +15,10 @@ jobs:
        name: Generate build ID
        id: prep
        run: |
-          branch=${GITHUB_REF##*/}
+          name=${{vars.NAME}}
           sha=${GITHUB_SHA::8}
           ts=$(date +%s)
-          echo "::set-output name=BUILD_ID::${branch}-${sha}-${ts}"          
+          echo "::set-output name=BUILD_ID::${name}-${sha}-${ts}"          
       -
         name: Checkout
         uses: actions/checkout@v3
