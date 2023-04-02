@@ -16,7 +16,7 @@ jobs:
        id: prep
        run: |
           name=${{vars.NAME}}
-          sha=${github.run_number}
+          sha=${GITHUB_REF}
           echo "::set-output name=BUILD_ID::${name}-${sha}"          
       -
         name: Checkout
