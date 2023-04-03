@@ -60,13 +60,11 @@ jobs:
          with:
             username: ${{ secrets.DOCKERHUB_USERNAME }}
             password: ${{ secrets.DOCKERHUB_TOKEN }}
-       - name: Run Container
-         with:
-           script: |
-               cd /home/azureuser/myDevProject
-               sudo docker pull ${{ env.IMAGE }}:${{ steps.prep.outputs.BUILD_ID }}
-               sudo docker stop my_app
-               sudo docker container rm my_app
-               sudo docker run --name my_app -p 5000:5000 -d ${{ env.IMAGE }}:${{ steps.prep.outputs.BUILD_ID }}
+            script: |
+                 cd /home/azureuser/myDevProject
+                 sudo docker pull ${{ env.IMAGE }}:${{ steps.prep.outputs.BUILD_ID }}
+                 sudo docker stop my_app
+                 sudo docker container rm my_app
+                 sudo docker run --name my_app -p 5000:5000 -d ${{ env.IMAGE }}:${{ steps.prep.outputs.BUILD_ID }}
 
       
