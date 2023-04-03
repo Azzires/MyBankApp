@@ -43,10 +43,18 @@ jobs:
       
     pull:
        name: pull
+       env:
+          IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/mydevrepo
        if: ${{ success() }}
        runs-on: ubuntu-latest
        needs: build
        steps:
+       - name: Generate build ID
+         id: prep
+         run: |
+            name=${{vars.NAME}}
+            sha=${GITHUB_SHA:0:7}
+            echo "::set-output name=BUILD_ID::${name}-${sha}"
    
        - name: Deploy to VM
          uses: appleboy/ssh-action@master
