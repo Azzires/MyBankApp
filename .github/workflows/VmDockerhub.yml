@@ -1,0 +1,78 @@
+name: VmHub
+
+on:
+  push:
+    branches:
+      - "main"
+      
+jobs:
+    build:
+      name: Build an image
+      env:
+          IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/mydevrepo
+      runs-on: ubuntu-latest
+      steps:
+        -
+         name: Generate build ID
+         id: prep
+         run: |
+            name=${{vars.NAME}}
+            sha=${GITHUB_SHA:0:7}
+            echo "::set-output name=BUILD_ID::${name}-${sha}"          
+        -
+          name: Checkout
+          uses: actions/checkout@v3
+        -
+          name: Login to Docker Hub
+          uses: docker/login-action@v2
+          with:
+            username: ${{ secrets.DOCKERHUB_USERNAME }}
+            password: ${{ secrets.DOCKERHUB_TOKEN }}
+        -
+          name: Set up Docker Buildx
+          uses: docker/setup-buildx-action@v2
+        -
+          name: Build and push
+          uses: docker/build-push-action@v4
+          with:
+            context: .
+            file: ./Dockerfile
+            push: true
+            tags: |
+              ${{ env.IMAGE }}:${{ steps.prep.outputs.BUILD_ID }} 
+      
+    pull:
+       name: Pull from DockerHub
+       env:
+          IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/mydevrepo
+       if: ${{ success() }}
+       runs-on: ubuntu-latest
+       needs: build
+       steps:
+       -  name: Generate build ID
+          id: prep
+          run: |
+              name=${{vars.NAME}}
+              sha=${GITHUB_SHA:0:7}
+              echo "::set-output name=BUILD_ID::${name}-${sha}"
+       
+       - name: Login to Docker Hub
+         uses: docker/login-action@v2
+         with:
+            username: ${{ secrets.DOCKERHUB_USERNAME }}
+            password: ${{ secrets.DOCKERHUB_TOKEN }}
+            
+       - name: Deploy to VM
+         uses: appleboy/ssh-action@master
+         with:
+           host: ${{ secrets.HOST }}
+           username: ${{ secrets.USERNAME }}
+           key: ${{ secrets.SSH_PRIVATE_KEY }}
+           port: 22
+           script: |
+                 cd /home/azureuser/myDevProject
+                 sudo docker pull ${{ env.IMAGE }}:${{ steps.prep.outputs.BUILD_ID }}
+                 sudo docker stop my_app
+                 sudo docker container rm my_app
+                 sudo docker run --name my_app -p 5000:5000 -d ${{ env.IMAGE }}:${{ steps.prep.outputs.BUILD_ID }}
+
