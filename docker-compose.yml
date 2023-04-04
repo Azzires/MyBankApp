@@ -1,0 +1,19 @@
+version: "3.8"
+services:
+  frontend:
+      build: ./frontend
+      ports:
+        - 5000:5000
+  database:
+      image: postgres:alpine3.17
+      environment:
+        - POSTGRES_USER=stoyanov
+        - POSTGRES_PASSWORD=tt036122758!
+        - POSTGRES_DB=mypostgres
+      ports:
+        - 5432:5432
+      volumes:
+        - pgdata:/var/lib/postgres/data
+volumes:
+ pgdata:
+      

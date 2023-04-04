@@ -5,7 +5,7 @@ from flask import render_template
 app = Flask(__name__)
 
 @app.route("/")
-def hello_world():
+def main_page():
     return render_template(
         "page.html"
 
