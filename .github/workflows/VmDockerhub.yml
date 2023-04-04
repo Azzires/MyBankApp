@@ -7,7 +7,7 @@ on:
       
 jobs:
     build:
-      name: Build, Tag, Push
+      name: Docker Workflow 
       env:
           IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/mydevrepo
       runs-on: ubuntu-latest
@@ -34,12 +34,12 @@ jobs:
         -
           name: Build an image
           run: |
-                - docker-compose build
-                - docker tag my-devops-project-frontend:latest ${{ env.IMAGE }}:${{ steps.prep.outputs.BUILD_ID }}
-                - docker push ${{ env.IMAGE }}:${{ steps.prep.outputs.BUILD_ID }}
+                  docker-compose build
+                  docker tag my-devops-project-frontend:latest ${{ env.IMAGE }}:${{ steps.prep.outputs.BUILD_ID }}
+                  docker push ${{ env.IMAGE }}:${{ steps.prep.outputs.BUILD_ID }}
 
     pull:
-       name: Vm, Pull, Run
+       name: Vm Workflow
        env:
           IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/mydevrepo
        if: ${{ success() }}
