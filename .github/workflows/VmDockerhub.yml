@@ -35,8 +35,8 @@ jobs:
           name: Build an image
           run: |
                   docker-compose build
-                  docker tag my-devops-project-frontend:latest $IMAGE:${{ steps.prep.outputs.BUILD_ID }}
-                  docker push $IMAGE:${{ steps.prep.outputs.BUILD_ID }}
+                  docker tag my-devops-project-frontend:latest elyon204/mydevrepo:${{ steps.prep.outputs.BUILD_ID }}
+                  docker push elyon204/mydevrepo:${{ steps.prep.outputs.BUILD_ID }}
 
     pull:
        name: Vm Workflow
