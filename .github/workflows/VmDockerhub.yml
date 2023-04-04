@@ -33,13 +33,11 @@ jobs:
           uses: docker/setup-buildx-action@v2
         -
           name: Build and push
-          uses: docker/build-push-action@v4
-          with:
-            context: .
-            file: ./Dockerfile
-            push: true
-            tags: |
-              ${{ env.IMAGE }}:${{ steps.prep.outputs.BUILD_ID }} 
+          commands:
+                
+              - docker-compose build
+              - docker tag my-devops-project-frontend:latest ${{ env.IMAGE }}:${{ steps.prep.outputs.BUILD_ID }}
+              - docker push ${{ env.IMAGE }}:${{ steps.prep.outputs.BUILD_ID }}
       
     pull:
        name: Pull from DockerHub
@@ -70,9 +68,9 @@ jobs:
            key: ${{ secrets.SSH_PRIVATE_KEY }}
            port: 22
            script: |
-                 cd /home/azureuser/myDevProject
-                 sudo docker pull ${{ env.IMAGE }}:${{ steps.prep.outputs.BUILD_ID }}
-                 sudo docker stop my_app
-                 sudo docker container rm my_app
-                 sudo docker run --name my_app -p 5000:5000 -d ${{ env.IMAGE }}:${{ steps.prep.outputs.BUILD_ID }}
+                 docker container rm -f $(docker container ls -aq)
+                 docker image rm -f $(docker image ls -q)
+                 docker pull ${{ env.IMAGE }}:${{ steps.prep.outputs.BUILD_ID }}
+                 docker-compose up -d
+                 
 
