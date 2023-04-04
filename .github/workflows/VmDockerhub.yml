@@ -35,7 +35,7 @@ jobs:
           name: Build and push
           id: build
           run: |
-              script: |
+              commands:
                   - docker-compose build
                   - docker tag my-devops-project-frontend:latest ${{ env.IMAGE }}:${{ steps.prep.outputs.BUILD_ID }}
                   - docker push ${{ env.IMAGE }}:${{ steps.prep.outputs.BUILD_ID }}
