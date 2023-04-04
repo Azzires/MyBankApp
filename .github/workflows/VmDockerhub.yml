@@ -33,12 +33,13 @@ jobs:
           uses: docker/setup-buildx-action@v2
         -
           name: Build and push
-          commands:
-                
-              - docker-compose build
-              - docker tag my-devops-project-frontend:latest ${{ env.IMAGE }}:${{ steps.prep.outputs.BUILD_ID }}
-              - docker push ${{ env.IMAGE }}:${{ steps.prep.outputs.BUILD_ID }}
-      
+          id: build
+          run: |
+              script: |
+                  - docker-compose build
+                  - docker tag my-devops-project-frontend:latest ${{ env.IMAGE }}:${{ steps.prep.outputs.BUILD_ID }}
+                  - docker push ${{ env.IMAGE }}:${{ steps.prep.outputs.BUILD_ID }}
+
     pull:
        name: Pull from DockerHub
        env:
