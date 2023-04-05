@@ -69,7 +69,7 @@ jobs:
            script: |
                  docker container rm -f $(docker container ls -aq)
                  docker image rm -f $(docker image ls -q)
-                 docker pull ${{ env.IMAGE }}:${{ steps.prep.outputs.BUILD_ID }}
+                 docker pull $IMAGE:${{ steps.prep.outputs.BUILD_ID }}
                  docker-compose up -d
                  
 
