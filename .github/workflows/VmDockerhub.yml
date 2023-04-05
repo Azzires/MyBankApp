@@ -7,7 +7,7 @@ on:
       
 jobs:
     build:
-      name: Build an image
+      name: Docker Workflow 
       env:
           IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/mydevrepo
       runs-on: ubuntu-latest
@@ -32,15 +32,16 @@ jobs:
           name: Set up Docker Buildx
           uses: docker/setup-buildx-action@v2
         -
-          name: Build and push
-          commands:
-                
-              - docker-compose build
-              - docker tag my-devops-project-frontend:latest ${{ env.IMAGE }}:${{ steps.prep.outputs.BUILD_ID }}
-              - docker push ${{ env.IMAGE }}:${{ steps.prep.outputs.BUILD_ID }}
-      
+          name: Build an image
+          run: |
+                  docker-compose build
+                  docker tag mydevproject_frontend:latest $IMAGE:${{ steps.prep.outputs.BUILD_ID }}
+                  docker push $IMAGE:${{ steps.prep.outputs.BUILD_ID }}
+          env:
+             DOCKER_IMAGE_TAG: ${{ steps.prep.outputs.BUILD_ID }}
+
     pull:
-       name: Pull from DockerHub
+       name: Vm Workflow
        env:
           IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/mydevrepo
        if: ${{ success() }}
@@ -68,9 +69,10 @@ jobs:
            key: ${{ secrets.SSH_PRIVATE_KEY }}
            port: 22
            script: |
+                 cd /home/azureuser/myDevProject
                  docker container rm -f $(docker container ls -aq)
                  docker image rm -f $(docker image ls -q)
-                 docker pull ${{ env.IMAGE }}:${{ steps.prep.outputs.BUILD_ID }}
-                 docker-compose up -d
+                 docker pull elyon204/mydevrepo:${{ steps.prep.outputs.BUILD_ID }}
+                 DOCKER_IMAGE_TAG=${{ steps.prep.outputs.BUILD_ID }} docker-compose up -d
                  
 
