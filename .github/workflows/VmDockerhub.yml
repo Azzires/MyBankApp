@@ -67,7 +67,7 @@ jobs:
            key: ${{ secrets.SSH_PRIVATE_KEY }}
            port: 22
            script: |
-                 docker pull $IMAGE:${{ steps.prep.outputs.BUILD_ID }}
+                 docker pull elyon204/mydevrepo:${{ steps.prep.outputs.BUILD_ID }}
                  docker-compose up -d
                  
 
