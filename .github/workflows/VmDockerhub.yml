@@ -34,9 +34,11 @@ jobs:
         -
           name: Build an image
           run: |
-                  docker-compose build --build-arg VERSION=latest
-                  docker tag mydevproject_frontend:latest $IMAGE:${{ steps.prep.outputs.BUILD_ID }}
+                  docker-compose build
+                  docker tag my-devops-project-frontend:latest $IMAGE:${{ steps.prep.outputs.BUILD_ID }}
                   docker push $IMAGE:${{ steps.prep.outputs.BUILD_ID }}
+          env:
+             DOCKER_IMAGE_TAG: ${{ steps.prep.outputs.BUILD_ID }}
 
     pull:
        name: Vm Workflow
@@ -71,6 +73,6 @@ jobs:
                  docker container rm -f $(docker container ls -aq)
                  docker image rm -f $(docker image ls -q)
                  docker pull elyon204/mydevrepo:${{ steps.prep.outputs.BUILD_ID }}
-                 docker-compose up -d
+                 DOCKER_IMAGE_TAG=${{ steps.prep.outputs.BUILD_ID }} docker-compose up -d
                  
 
