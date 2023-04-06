@@ -10,6 +10,12 @@ def main_page():
         "page.html"
 
     )
+@app.route("/information")
+def user_information():
+    return render_template(
+        "information.html"
+    )
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
