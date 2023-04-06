@@ -11,6 +11,7 @@ jobs:
       env:
           IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/mydevrepo
       runs-on: ubuntu-latest
+      environment: Dev
       steps:
         -
          name: Generate build ID
@@ -46,6 +47,7 @@ jobs:
           IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/mydevrepo
        if: ${{ success() }}
        runs-on: ubuntu-latest
+       environment: Dev
        needs: build
        steps:
        -  name: Generate build ID
