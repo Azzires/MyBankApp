@@ -73,7 +73,8 @@ jobs:
            port: 22
            script: |
                  cd /home/azureuser/myDevProject
- 
+                 docker container rm -f $(docker container ls -aq)
+                 docker image rm -f $(docker image ls -q)
                  docker pull elyon204/mydevrepo:${{ steps.prep.outputs.BUILD_ID }}
                  DOCKER_IMAGE_TAG=${{ steps.prep.outputs.BUILD_ID }} docker-compose up -d
                  
