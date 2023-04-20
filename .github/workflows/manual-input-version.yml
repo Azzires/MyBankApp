@@ -14,7 +14,7 @@ on:
 jobs:
   pull:
      name: Vm
-     runs-on: ubuntu:latest
+     runs-on: ubuntu-latest
      env:
         IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/mydevrepo
      steps:
