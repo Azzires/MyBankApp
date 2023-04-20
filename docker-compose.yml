@@ -1,9 +1,14 @@
 version: "3.8"
 services:
-  frontend:
+  web:
       build: ./frontend
-      ports:
-        - 5000:5000
+
+      expose:
+        - 8000
+      # ports:
+      #   - 8000:8000
+      networks:
+        - my-network
   database:
       image: postgres:alpine3.17
       environment:
@@ -13,7 +18,23 @@ services:
       ports:
         - 5432:5432
       volumes:
-        - pgdata:/var/lib/postgres/data
+        - pgdata:/var/lib/postgres/data  
+      networks:
+        - my-network
+
+  nginx:
+      container_name: nginx
+      image: nginx
+      build: ./nginx_d_file
+      ports:
+        - 80:80    
+      depends_on:
+        - web
+      networks:
+        - my-network
 volumes:
- pgdata:
-      
+  pgdata:
+
+
+networks:
+  my-network:
