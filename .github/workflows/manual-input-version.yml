@@ -1,0 +1,43 @@
+name: manual-input-version
+
+
+on:
+  workflow_dispatch:
+    
+    inputs:
+      name:
+       
+       description: 'Version you want to build'
+       
+       required: true
+       
+jobs:
+  pull:
+     name: Vm
+     runs-on: ubuntu-latest
+     env:
+        IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/mydevrepo
+     steps:
+      
+       - name: Login to Docker Hub
+         uses: docker/login-action@v2
+         with:
+            username: ${{ secrets.DOCKERHUB_USERNAME }}
+            password: ${{ secrets.DOCKERHUB_TOKEN }}
+       
+       
+       - name: Deploy to VM
+         uses: appleboy/ssh-action@master
+         with:
+           host: ${{ secrets.HOST }}
+           username: ${{ secrets.USERNAME }}
+           key: ${{ secrets.SSH_PRIVATE_KEY }}
+           port: 22
+           script: |
+                 cd /home/azureuser/myDevProject
+                 docker container rm -f $(docker container ls -aq)
+                 docker image rm -f $(docker image ls -q)
+                 docker pull elyon204/mydevrepo:${{ github.event.inputs.name }}
+                 DOCKER_IMAGE_TAG=${{ github.event.inputs.name }} docker-compose up -d
+       
+         
